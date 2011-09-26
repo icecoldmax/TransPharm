@@ -1,5 +1,5 @@
 require_relative "transpharm/version"
-require_relative "db_example"
+require_relative "lib/db"
 
 
 module Transpharm

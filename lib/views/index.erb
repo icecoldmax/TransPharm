@@ -1,0 +1,127 @@
+<head>
+	<title>TransPharm</title>
+	
+	<link rel="stylesheet" type="text/css" href="/css/transpharm.css" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" type="text/javascript"></script>
+	<script type="text/javascript" src="/js/jquery.validate.js"></script>
+	<script type="text/javascript">
+
+	$(document).ready(function(){
+	
+	
+		$("#search_form").validate({
+		  errorPlacement: function(error, element) {
+		     error.appendTo($('.val_container'));
+		   },
+		   debug:false
+		 })
+	});
+
+</script>
+
+</head>
+<body>
+<% unless @search_params %>
+<center>
+<h1 class="header1" style="margin-top: 50px;">Find your medicine!</h1>
+<div id="search" style="width: 800px; padding: 10px;">
+	<h3>Search for...</h3>
+	
+	<form id="search_form" action="/medsearch/" method="POST">
+		<table width="557" style="text-align: center;">
+			<tr><center><td id="searchbar"><input type="text" name="search_terms" id="search_terms" class="required" size="100"></td></tr>
+			<tr>
+				<td class="val_container"></td>
+			</tr></center>
+		</table>
+		<table id="radios" width="557">
+			<tr><td><input type="radio" name="search_params" value="active_ingredients" class="required" checked>Active Ingredients</td>
+				<td><input type="radio" name="search_params" value="brand_name" class="required">Brand Name</td>
+			</tr>
+			<tr>
+				<td><input type="radio" name="search_params" value="effects" class="required">Effects</td>
+				<td><input type="radio" name="search_params" value="side_effects" class="required">Side Effects</td>
+			</tr>
+		</table>
+			<table width="557" id="submit_and_error">
+				<tr>
+					<td><input type="submit" id="search_submit"></td>
+				</tr>
+			</table>
+	</form>
+	
+</div>
+</center>	
+<% else %>
+<center>
+	<h1 class="header1" style="margin-top: 50px;">Find your medicine!</h1>
+	<div id="search" style="width: 800px; padding: 10px;">
+		<h3>Search for...</h3>
+
+		<form id="search_form" action="/medsearch/" method="POST">
+			<table id="search_bar" width="557" style="text-align: center;">
+				<tr><center><td id="search_bar_td"><input type="text" name="search_terms" id="search_terms" class="required" size="100"></td></tr>
+				<tr>
+					<td class="val_container"></td>
+				</tr></center>
+			</table>
+			<table id="radios" width="557">
+				<tr><td><input type="radio" name="search_params" value="active_ingredients" class="required" checked>Active Ingredients</td>
+					<td><input type="radio" name="search_params" value="brand_name" class="required">Brand Name</td>
+				</tr>
+				<tr>
+					<td><input type="radio" name="search_params" value="effects" class="required">Effects</td>
+					<td><input type="radio" name="search_params" value="side_effects" class="required">Side Effects</td>
+				</tr>
+			</table>
+				<table width="557" id="submit_and_error">
+					<tr>
+						<td><input type="submit" id="search_submit"></td>
+					</tr>
+				</table>
+		</form>
+
+	</div>
+	<h1 class="header1">Results</h1>
+	<div id="results">
+	<p>Search for "<%= @search_terms %>" returned <%= @results.count %> results.</p>
+	</div>
+
+	<% for i in @results %>
+		<div class="search_result" id="search_result<%= i[:id] %>">
+		<table class="search_results_table">
+			<tr>
+				<td class="result_brand_name"><%= i[:brand_name] %></td>
+			</tr>
+			<tr>
+				<td class="result_active_ingredients">Active Ingredients = <%= i[:active_ingredients] %></td>
+			</tr>
+		</table>
+		<table>
+			<tr>
+				<th>Database ID:</th><td><%= i[:id] %></td>
+			</tr>
+			<tr>
+				<th>Effects:</th><td><%= i[:effects] %></td>
+			</tr>
+			<tr>
+				<th>Dosage:</th><td><%= i[:dosage] %></td>
+			</tr>
+			<tr>
+				<th>Precautions:</th><td><%= i[:precautions] %></td>
+			</tr>
+			<tr>
+				<th>Side Effects:</th><td><%= i[:side_effects] %></td>
+			</tr>
+			<tr>
+				<th>Storage:</th><td><%= i[:storage] %></td>
+			</tr>
+
+		</table>
+
+		
+		</div>
+	<% end %>
+
+<% end %>
+			

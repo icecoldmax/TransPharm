@@ -1,0 +1,89 @@
+/* @override http://localhost:4567/css/transpharm.css */
+
+body {
+
+	color: #115577;
+	background-color: #fcf9f7
+	font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+table {
+	background: #eeeeee;
+	padding: 10px;
+	border: solid 1px darkgreen;
+
+}
+
+table td {
+border: solid 1px #cccccc;
+width: 527px;
+height: 40px;
+
+}
+
+#search_bar_td {
+	width: 80%;
+	padding: 0px;
+}
+
+#search_bar {
+	border-bottom: 0px;
+}
+
+#search_terms {
+	width: 100%;
+	text-align: center;
+	font-size: 1.8em;
+}
+
+td.val_container {
+	width: 527px;
+	color: red;
+	text-align: center;
+	height: 30px;
+}
+
+#radios {
+	border-top: 0px;
+	border-bottom: 0px;
+	margin-top: -10px;
+}
+
+#radios td {
+color: #780c10;
+padding-left: 90px;
+}
+
+#submit_and_error {
+padding-top: 0px;
+margin-top: -10px;
+text-align: center;
+border-top: 0px;
+}
+
+.search_result {
+	width: 1000px;
+
+	padding: 10px;
+}
+
+.search_result table {
+	width: 1000px;
+	
+}
+
+.result_brand_name, .result_active_ingredients {
+	text-align: center;
+	font-size: 2em;
+	color: purple;
+}
+
+.search_result table th {
+	width: 15%;
+}
+
+.search_result table td {
+	padding: 5px;
+	line-height: 1.5em;
+}
+

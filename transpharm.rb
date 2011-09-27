@@ -10,7 +10,12 @@ module Transpharm
 
   post '/medsearch/' do
     
-    @search_terms = params[:search_terms]
+    
+    @orig_search_terms = params[:search_terms]
+    
+    # So I can redisplay the entered search terms (not upcased) in the form without using ajax :P
+    
+    @search_terms = @orig_search_terms
     @search_params = params[:search_params]
     
     if @search_terms.hasjap?

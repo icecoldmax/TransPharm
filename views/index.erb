@@ -60,7 +60,7 @@
 
 		<form id="search_form" action="/medsearch/" method="POST">
 			<table id="search_bar" width="557" style="text-align: center;">
-				<tr><center><td id="search_bar_td"><input type="text" name="search_terms" id="search_terms" class="required" size="100"></td></tr>
+				<tr><center><td id="search_bar_td"><input type="text" name="search_terms" id="search_terms" class="required" size="100" value="<%= @orig_search_terms %>"></td></tr>
 				<tr>
 					<td class="val_container"></td>
 				</tr></center>

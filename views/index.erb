@@ -91,30 +91,30 @@
 		<div class="search_result" id="search_result<%= i[:id] %>">
 		<table class="search_results_table">
 			<tr>
-				<td class="result_brand_name"><%= i[:brand_name] %></td>
+				<td class="result_brand_name">Brand Name / 商品名 : <span class="big_title"><%= i[:brand_name] %></span></td>
 			</tr>
 			<tr>
-				<td class="result_active_ingredients">Active Ingredients = <%= i[:active_ingredients] %></td>
+				<td class="result_active_ingredients">Active Ingredients / 主成分 : <span class="big_title"><%= i[:active_ingredients] %></span></td>
 			</tr>
 		</table>
 		<table>
 			<tr>
-				<th>Database ID:</th><td><%= i[:id] %></td>
+				<th>ID :</th><td><%= i[:id] %></td>
 			</tr>
 			<tr>
-				<th>Effects:</th><td><%= i[:effects] %></td>
+				<th>Effects / 効果 :</th><td><%= i[:effects] %></td>
 			</tr>
 			<tr>
-				<th>Dosage:</th><td><%= i[:dosage] %></td>
+				<th>Dosage / 用法・用量 :</th><td><%= i[:dosage] %></td>
 			</tr>
 			<tr>
-				<th>Precautions:</th><td><%= i[:precautions] %></td>
+				<th>Precautions / 注意 :</th><td><%= i[:precautions] %></td>
 			</tr>
 			<tr>
-				<th>Side Effects:</th><td><%= i[:side_effects] %></td>
+				<th>Side Effects / 副作用 :</th><td><%= i[:side_effects] %></td>
 			</tr>
 			<tr>
-				<th>Storage:</th><td><%= i[:storage] %></td>
+				<th>Storage / 保管方法その他 :</th><td><%= i[:storage] %></td>
 			</tr>
 
 		</table>

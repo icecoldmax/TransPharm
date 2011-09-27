@@ -74,12 +74,17 @@ border-top: 0px;
 
 .result_brand_name, .result_active_ingredients {
 	text-align: center;
-	font-size: 2em;
+	font-size: 1.5em;
+	color: darkred;
+}
+
+.big_title {
+	font-size: 1.7em;
 	color: purple;
 }
 
 .search_result table th {
-	width: 15%;
+	width: 20%;
 }
 
 .search_result table td {

@@ -16,43 +16,60 @@ module Transpharm
     # So I can redisplay the entered search terms (not upcased) in the form without using ajax :P
     
     @search_terms = @orig_search_terms
-    @search_params = params[:search_params]
     
-    if @search_terms.hasjap?
-    
-        case @search_params
-        when "active_ingredients"
-          @results = $meds_ja.filter(:active_ingredients.like("%#{@search_terms}%"))
-        when "brand_name"
-          @results = $meds_ja.filter(:brand_name.like("%#{@search_terms}%"))
-        when "effects"
-          @results = $meds_ja.filter(:effects.like("%#{@search_terms}%"))
-        when "side_effects"
-          @results = $meds_ja.filter(:side_effects.like("%#{@search_terms}%"))
-        else
-          @results = "I'm a sad Japanese bear"
-        end
-    
-    else
-    
-      @search_terms = @search_terms.upcase
-    
-        case @search_params
-        when "active_ingredients"
-          @results = $japmeds.filter(:search_active_ingredients.like("%#{@search_terms}%"))
-        when "brand_name"
-          @results = $japmeds.filter(:search_brand_name.like("%#{@search_terms}%"))
-        when "effects"
-          @results = $japmeds.filter(:search_effects.like("%#{@search_terms}%"))
-        when "side_effects"
-          @results = $japmeds.filter(:search_side_effects.like("%#{@search_terms}%"))
-        else
-          @results = "I'm a sad English bear"
-        end
+    @search_params = []
+    for param in params[:search_params] do
+      @search_params << param
     end
-
-    @results = @results.order(:id).select(:id, :brand_name, :active_ingredients, :effects, :dosage, :precautions, :side_effects, :storage, :engurl, :japurl)
-    erb :index
-  end
+        
+    if @search_terms.hasjap?
+      
+      if @search_params.length == 4
+      
+        @results = $meds_ja.filter("#{@search_params[0]} LIKE ? OR #{@search_params[1]} LIKE ? OR #{@search_params[2]} LIKE ? OR #{@search_params[3]} LIKE ?", "%#{@search_terms}%", "%#{@search_terms}%", "%#{@search_terms}%", "%#{@search_terms}%")      
+      
+      elsif @search_params.length == 3
+              
+        @results = $meds_ja.filter("#{@search_params[0]} LIKE ? OR #{@search_params[1]} LIKE ? OR #{@search_params[2]} LIKE ?", "%#{@search_terms}%", "%#{@search_terms}%", "%#{@search_terms}%")
+       
+       elsif @search_params.length == 2
+         
+         @results = $meds_ja.filter("#{@search_params[0]} LIKE ? OR #{@search_params[1]} LIKE ?", "%#{@search_terms}%", "%#{@search_terms}%")
+               
+      elsif @search_params.length == 1
+       
+        @results = $meds_ja.filter("#{@search_params[0]} LIKE ?", "%#{@search_terms}%")
+       
+      else
+        p "Too many or too few params!!"
+      end
+            
+    else
+            
+      if @search_params.length == 4
+      
+        @results = $japmeds.filter("#{@search_params[0]} LIKE ? OR #{@search_params[1]} LIKE ? OR #{@search_params[2]} LIKE ? OR #{@search_params[3]} LIKE ?", "%#{@search_terms}%", "%#{@search_terms}%", "%#{@search_terms}%", "%#{@search_terms}%")      
+      
+      elsif @search_params.length == 3
+              
+        @results = $japmeds.filter("#{@search_params[0]} LIKE ? OR #{@search_params[1]} LIKE ? OR #{@search_params[2]} LIKE ?", "%#{@search_terms}%", "%#{@search_terms}%", "%#{@search_terms}%")
+       
+       elsif @search_params.length == 2
+         
+         @results = $japmeds.filter("#{@search_params[0]} LIKE ? OR #{@search_params[1]} LIKE ?", "%#{@search_terms}%", "%#{@search_terms}%")
+               
+      elsif @search_params.length == 1
+       
+        @results = $japmeds.filter("#{@search_params[0]} LIKE ?", "%#{@search_terms}%")
+       
+      else
+        p "Too many or too few params!!"
+      end
+          
+    end
+  
+            @results = @results.order(:id).select(:id, :brand_name, :active_ingredients, :effects, :dosage, :precautions, :side_effects, :storage, :engurl, :japurl)
+            erb :index
+    end
 
 end

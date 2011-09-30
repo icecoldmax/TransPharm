@@ -62,33 +62,33 @@ border-top: 0px;
 }
 
 .search_result {
-	background: #eeeeee;
-	padding: 5px;
-
+	width: 1200px;
 
 }
 
 .search_result table {
-	background-color: #fefad2;
+	width: 100%;
 	
 }
 
+.result_brand_name, .result_active_ingredients {
+	text-align: center;
+	font-size: 1.5em;
+	color: darkred;
+}
+
+.big_title {
+	font-size: 1.2em;
+	color: purple;
+}
 .search_result, .search_results_secondary, .search_result_en, .search_result_ja {
 	border: none;
+	width: 100%;
 
-
-}
-.search_result_en, .search_result_ja {
-	border: outset 1px #cccccc;
-	margin: 0px 5px 0px 5px;
-	
-	
-	
 }
 
 .search_result table th {
 	width: 20%;
-	border: solid 1px #cccccc;
 }
 
 .search_result table td {
@@ -105,7 +105,6 @@ border-top: 0px;
 
 #short_results table {
 	text-align: center;
-	width: 100%;
 }
 
 .short_result_langs {
@@ -130,6 +129,7 @@ border-top: 0px;
 
 	border-top: solid 1px darkgreen;
 	border-bottom: solid 1px darkgreen;
+	
 	width: 100%;
 }
 
@@ -139,7 +139,7 @@ border-top: 0px;
 	border-right: solid 1px darkgreen;
 }
 
-#short_results_data_table th.no_r_border {
+#short_results_data_table th.norborder {
 	border-right: none;
 }
 
@@ -147,19 +147,16 @@ border-top: 0px;
 	padding: 5px;
 }
 
-.short_result_row tr {
-	width: 100%;
+.short_result_row {
 	height: 60px;
+	margin-bottom: -5px;
 
-}
-
-td.short_result_td_en.selected, td.short_result_td_ja.selected {
-	background-color: #d3ffd7;
 }
 
 .short_result_row th, .short_result_row td {
 	width: 25%;
 	padding: 5px;
 	line-height: 1.5em;
+
 } 
 

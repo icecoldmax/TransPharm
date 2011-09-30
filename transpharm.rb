@@ -11,14 +11,14 @@ module Transpharm
   post '/medsearch/' do
     
     @search_terms = params[:search_terms]
-    
+        
     @search_params = []
     @orig_search_params = []
     for param in params[:search_params] do
       @search_params << param
       @orig_search_params << param
     end
-        
+    
     if @search_terms.hasjap?
       @search_params.map! { |word| "#{word}_ja" }
     else
@@ -42,6 +42,9 @@ module Transpharm
       end
           
       @results = @results.order(:id).select(:id, :brand_name_en, :brand_name_ja, :active_ingredients_en, :active_ingredients_ja, :effects_en, :effects_ja, :dosage_en, :dosage_ja, :precautions_en, :precautions_ja, :side_effects_en, :side_effects_ja, :storage_en, :storage_ja, :engurl, :japurl)
+
+      puts "Displaying results for search: '#{@search_terms}'  in  '#{@search_params}' (#{@results.count} results)"
+
       erb :index
       
     end

@@ -17,25 +17,19 @@
 			
 		$('.short_result_td_en').click(function() {
 			var id = $(this).parent().attr("id");
-			$('.selected').removeClass("selected");
-			$(this).addClass("selected");
 			$('#search_result_en' + id).slideToggle(500);
 		});
 		
-		$('.short_result_td_ja').click(function(e) {
+		$('.short_result_td_ja').click(function() {
 			var id = $(this).parent().attr("id");
-			$('.selected').removeClass("selected");
-			$(this).addClass("selected");
 			$('#search_result_ja' + id).slideToggle(500);
 		});
 		
-
-		// $('.short_result_td_en, .short_result_td_ja').hover(function() {
-		// 			$(this).css({'background-color': '#fefad2'});
-		// 			}, function() {
-		// 				$(this).css({'background-color': '#eeeeee'});
-		// 			}
-		// 		);
+		$('.short_result_row_tr').hover(function() {
+			$(this).css('text-decoration', 'underline');}, function() {
+				$(this).css('text-decoration', 'none');
+				}
+		);
 		
 	});
 
@@ -127,9 +121,10 @@
 					</tr>
 				</table>
 		</form>
-
 	</div>
+
 <% if @results.count > 0 %>
+	
 	<h1 class="header1">Results</h1>
 	<div id="results">
 	<p>Search for "<%= @search_terms %>" in <%= @search_params %> returned <%= @results.count %> results.</p>
@@ -141,76 +136,75 @@
 				<th>Brand Name</th>
 				<th>商品名</th>
 				<th>Active Ingredients</th>
-				<th class="no_r_border">主成分</th>
+				<th class="norborder">主成分</th>
 			</tr>
 		</table>
+		
 	<% for i in @results %>
-			<table class="short_result_row" width="1200">
-				<tr id="<%= i[:id] %>">
-					<td class="short_result_td_en"><%= i[:brand_name_en] %></td>
-					<td class="short_result_td_ja"><%= i[:brand_name_ja] %></td>
-					<td class="short_result_td_en"><%= i[:active_ingredients_en] %></td>
-					<td class="short_result_td_ja"><%= i[:active_ingredients_ja] %></td>
-				</tr>
-			</table>
-			
-			<div class="search_result">
-			
-				<div class="search_result_en" id="search_result_en<%= i[:id] %>" style="display: none;">
-					<table class="search_results_secondary">
-				 		<tr>
-				 			<th>ID:</th><td><%= i[:id] %></td>
-				 		</tr>
-					 	<tr>
-					 		<th>Effects:</th><td><%= i[:effects_en] %></td>
-					 	</tr>
-					 	<tr>
-					 		<th>Dosage:</th><td><%= i[:dosage_en] %></td>
-					 	</tr>
-					 	<tr>
-					 		<th>Precautions:</th><td><%= i[:precautions_en] %></td>
-					 	</tr>
-					 	<tr>
-					 		<th>Side Effects:</th><td><%= i[:side_effects_en] %></td>
-					 	</tr>
-					 	<tr>
-					 		<th>Storage:</th><td><%= i[:storage_en] %></td>
-					 	</tr>
-			         </table>
-				</div>
-				<div class="search_result_ja" id="search_result_ja<%= i[:id] %>" style="display: none;">
-					<table class="search_results_secondary">
-				 		<tr>
-				 			<th>ID:</th><td><%= i[:id] %></td>
-				 		</tr>
-					 	<tr>
-					 		<th>効果 :</th><td><%= i[:effects_ja] %></td>
-					 	</tr>
-					 	<tr>
-					 		<th>用法・用量 :</th><td><%= i[:dosage_ja] %></td>
-					 	</tr>
-					 	<tr>
-					 		<th>注意 :</th><td><%= i[:precautions_ja] %></td>
-					 	</tr>
-					 	<tr>
-					 		<th>副作用 :</th><td><%= i[:side_effects_ja] %></td>
-					 	</tr>
-					 	<tr>
-					 		<th>保管方法その他 :</th><td><%= i[:storage_ja] %></td>
-					 	</tr>
-			         </table>
-				</div>
-			</div>
-
-	<% end %>
+		<table class="short_result_row" width="1200">
+			<tr class="short_result_row_tr" id="<%= i[:id] %>">
+				<td class="short_result_td_en"><%= i[:brand_name_en] %></td>
+				<td class="short_result_td_ja"><%= i[:brand_name_ja] %></td>
+				<td class="short_result_td_en"><%= i[:active_ingredients_en] %></td>
+				<td class="short_result_td_ja"><%= i[:active_ingredients_ja] %></td>
+			</tr>
 		</table>
+			
+		<div class="search_result" style="width: 1200px;">
+			<div class="search_result_en" id="search_result_en<%= i[:id] %>" style="width: 1200px; display: none;">
+				<table class="search_results_secondary" width="1200">
+					<tr>
+						<th>ID:</th><td><%= i[:id] %></td>
+					</tr>
+				 	<tr>
+				 		<th>Effects:</th><td><%= i[:effects_en] %></td>
+				 	</tr>
+				 	<tr>
+				 		<th>Dosage:</th><td><%= i[:dosage_en] %></td>
+				 	</tr>
+				 	<tr>
+				 		<th>Precautions:</th><td><%= i[:precautions_en] %></td>
+				 	</tr>
+				 	<tr>
+				 		<th>Side Effects:</th><td><%= i[:side_effects_en] %></td>
+				 	</tr>
+				 	<tr>
+				 		<th>Storage:</th><td><%= i[:storage_en] %></td>
+				 	</tr>
+			    </table>
+			</div>
+			
+			<div class="search_result_ja" id="search_result_ja<%= i[:id] %>" style="width: 1200px; display: none;">
+				<table class="search_results_secondary" width="1200">
+					<tr>
+				 		<th>ID:</th><td><%= i[:id] %></td>
+				 	</tr>
+					<tr>
+						<th>効果 :</th><td><%= i[:effects_ja] %></td>
+					</tr>
+					<tr>
+						<th>用法・用量 :</th><td><%= i[:dosage_ja] %></td>
+					</tr>
+					<tr>
+						<th>注意 :</th><td><%= i[:precautions_ja] %></td>
+					</tr>
+					<tr>
+						<th>副作用 :</th><td><%= i[:side_effects_ja] %></td>
+					</tr>
+					<tr>
+						<th>保管方法その他 :</th><td><%= i[:storage_ja] %></td>
+					</tr>
+				</table>
+			</div>
 		</div>
+	<% end %>
+	</table>
+	</div>
 
+<!-- else if there are 0 results -->		
 <% else %>
 <h1 class="header1">No Results!</h1>
-<% end %>
+<% end %>		
 
 <% end %>
-
-
 			

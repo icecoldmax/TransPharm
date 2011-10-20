@@ -1,0 +1,109 @@
+<head>
+	<title>TransPharm Phrase Builder</title>
+	<link rel="stylesheet" type="text/css" href="/css/transpharm.css" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" type="text/javascript"></script>
+	<script type="text/javascript" src="/js/jquery.validate.js"></script>
+	<script type="text/javascript">
+
+	$(document).ready(function(){
+	
+		// Disable the select box following a "containing" select box. //
+		$('select.containing').next().attr('disabled', 'disabled');
+		// And make it toggle properly //
+		$('select.containing').change(function() {
+			var selected = $(this).find('option:selected').text();
+			if (selected != " --- ") {
+				$(this).next().removeAttr('disabled');
+			} else {
+				$(this).next().attr('disabled', 'disabled');
+			}
+		});
+	
+	});
+
+</script>
+
+</head>
+<body>
+<p><a href="/">To start</a></p>
+<p><a href="/dict/addwords/">To add words</a></p>
+	<center>
+		<h1><u>Phrase Builder</u></h1>
+	
+	<div>
+		<h3>Medical conditions and diseases</h3>
+		
+		<form action="/dict/" method="post">
+<%= display_options("i have", "caps", "no nils") %>
+					
+<%= display_options("diseases", "no_caps", "no nils") %>
+
+		<br />
+		<input type="submit" value="do it">
+		</form>
+	</div>
+	
+	<div>
+		<h3>If something hurts</h3>
+		
+		<form action="/dict/" method="post">
+		
+<%= display_options("possessives", "caps", "no nils") %>
+			
+<%= display_options("body_parts", "no_caps", "no nils") %>
+
+<%= display_options("verbs", "no_caps", "no nils") %>
+
+<%= display_options("comparatives", "no_caps", "nilfirst") %>
+
+		<br />
+		<input type="submit" value="do it">
+		</form> 	
+	</div>
+	
+	<div>
+		<h3>Allergy</h3>
+		<form action="/dict/" method="post">
+			
+<%= display_options("i am", "caps", "no nils") %>
+		
+<%= display_options("adjectives", "no_caps", "no nils") %>
+
+<%= display_options("meds", "no_caps", "no nils") %>
+
+		<br />
+		<input type="submit" value="do it">
+		</form> 	
+	</div>
+	
+	<div>
+		<h3>Buying medicine</h3>
+		<form action="/dict/" method="post">
+
+<%= display_options("med_types", "caps", "no nils") %>
+
+
+<%= display_options("containing", "no_caps", "nilfirst") %>
+
+<%= display_options("meds", "no_caps", "nilfirst") %>
+
+<%= display_options("please", "no_caps", "no nils") %>
+
+		<br />
+		<input type="submit" value="do it">
+		</form> 	
+	</div>
+	
+<% if @jap_phrase %>
+
+	<div class="translated">
+		<p>"<%= @orig_phrase %>."</p>
+	</div>
+		
+	<div class="translated">
+		<p>「<%= @jap_phrase %>。」</p>
+		<p><em>"<%= @say_it_phrase %>."</em></p>
+	</div>
+	
+<% end %>
+	</center>

@@ -161,5 +161,16 @@ td.short_result_td_en.selected, td.short_result_td_ja.selected {
 	width: 25%;
 	padding: 5px;
 	line-height: 1.5em;
-} 
+}
+
+/* PhraseBuilder */
+
+.translated {
+	font-size: 2em;
+	color: darkred;
+	border: solid black 1px;
+	padding: 10px;
+	width: 1000px;
+	margin: 10px auto 10px auto;
+}
 

@@ -1,0 +1,92 @@
+<head>
+	<title>Add words</title>
+	<link rel="stylesheet" type="text/css" href="/css/transpharm.css" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" type="text/javascript"></script>
+	<script type="text/javascript" src="/js/jquery.validate.js"></script>
+	<script type="text/javascript">
+
+	$(document).ready(function(){
+	
+
+	});
+
+</script>
+
+</head>
+<body>
+<p><a href="/">To start</a></p>
+<p><a href="/dict/">To Phrase Builder</a></p>
+	<center>
+		<h1><u>Add words</u></h1>
+	<div>
+		<form action="/dict/addwords/" method="post">
+		<table>
+			<tr>
+				<th>English:</th><td><input type="text" name="eng"></td>
+			</tr>
+			<tr>
+				<th>Japanese:</th><td><input type="text" name="jap"></td>
+			</tr>
+			<tr>
+				<th>Say it:</th><td><input type="text" name="say_it"></td>
+			</tr>
+			<tr>			
+				<th>Dictionary:</th>
+				<td><select name="dict">
+					<option value="adjectives">Adjectives</option>
+					<option value="body_parts">Body Parts</option>
+					<option value="comparatives">Comparatives</option>
+					<option value="diseases">Diseases</option>
+					<option value="med_types">Med Types</option>
+					<option value="meds">Med names</option>
+					<option value="misc">Misc</option>
+					<option value="subjects">Subjects</option>
+					<option value="verbs">Verbs</option>
+				</select></td>
+			</tr>
+			
+			<tr>
+				<th>Keystring:</th>
+				<td><select name="key_string">
+					<option value="adjectives">adjectives</option>
+					<option value="body_parts">body_parts</option>
+					<option value="comparatives">comparatives</option>
+					<option value="containing">containing</option>
+					<option value="diseases">diseases</option>
+					<option value="i am">i am</option>
+					<option value="i have">i have</option>
+					<option value="meds">meds</option>
+					<option value="med_types">med_types</option>
+					<option value="please">please</option>
+					<option value="possessives">possessives</option>
+					<option value="verbs">verbs</option>
+					<option value="verbs + comp">verbs + comp ('hurts a little')</option>
+				</select></td>
+			</tr>
+			
+			<tr>
+				<th>Necessary words on the end?</th>
+				<td><select name="necc_words">
+					<option value="nothing">No</option>
+					<option value="desu">~ desu</option>
+					<option value="kakatteimasu">~ ni kakatte imasu</option>
+					<option value="hikimashita">~ wo hikimashita</option>
+					<option value="shiteimasu">~ wo shite imasu</option>
+					<option value="arimasu">~ ga arimasu</option>
+					<option value="dekiteimasu">~ ga dekite imasu</option>
+				</select></td>
+			</tr>
+			<tr>
+				<th></th><td><input type="submit" value="Add word!"></td>
+			</tr>
+		</table>
+		</form>
+	</div>
+	
+	<% if @success %>
+		<div>
+		<%= @success %>
+		</div>
+	<% end %>
+	
+</center>

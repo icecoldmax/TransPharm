@@ -165,6 +165,10 @@ td.short_result_td_en.selected, td.short_result_td_ja.selected {
 
 /* PhraseBuilder */
 
+#ajax_result {
+	margin: 40px;
+}
+
 .translated {
 	font-size: 2em;
 	color: darkred;
@@ -174,3 +178,30 @@ td.short_result_td_en.selected, td.short_result_td_ja.selected {
 	margin: 10px auto 10px auto;
 }
 
+.hover {
+	cursor: pointer;
+}
+
+.styled-select {
+	margin: 10px;
+}
+
+.styled-select select {
+	padding: 5px;
+	font-size: 14px;
+	border: 1px solid #999;
+	height: 30px;
+}
+
+.styled-select input.phrase_input {
+	width: 5em;
+}
+
+.styled-select input.autosearch {
+	background: url(images/down_arrow_select.jpeg) right no-repeat; 
+	height: 33px;
+	border: solid 1px #999;
+	padding: 5px;
+	font-size: 14px;
+	width: 200px;
+}

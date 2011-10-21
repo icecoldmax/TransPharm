@@ -18,7 +18,8 @@ def fix_orig_phrase(phrase)   # also fix if "containing" is misused
   orig_phrase = phrase.clone
   orig_phrase[0] = orig_phrase[0].capitalize
   @orig_phrase = orig_phrase.join(" ")
-    
+  @orig_phrase += "." unless @orig_phrase[-1] == "?"
+     
 end
 
 module Transpharm
@@ -56,6 +57,22 @@ module Transpharm
       
       erb :translation, :layout => false
             
+    end
+    
+    get '/dict/autocomplete/:category' do
+      category = params[:category]
+      term = params[:term].downcase
+      @array = []   
+      words = autocomplete_category(category)
+            
+      for word in words
+          @array << word[:eng] if word[:eng] =~ /^#{term}|\s#{term}/
+      end
+      puts "Search in '#{category}' | Term: '#{term}' | Matches: #{@array.join(", ")}."
+            
+      @array.to_json
+      
+              
     end
     
     get '/dict/addwords/' do

@@ -15,12 +15,18 @@ def addwords(eng, jap, say_it, dictionary, key_string, necc_words)
     $med_types.insert(:eng => eng.downcase, :jap => jap, :say_it => say_it)
   when "meds"
     $meds.insert(:eng => eng.downcase, :jap => jap, :say_it => say_it)
+  when "questions"
+    $questions.insert(:eng => eng.downcase, :jap => jap, :say_it => say_it)
   when "misc"
     $misc.insert(:eng => eng.downcase, :jap => jap, :say_it => say_it)
   when "subjects"
     $subjects.insert(:eng => eng.downcase, :jap => jap, :say_it => say_it)
   when "verbs"
     $verbs.insert(:eng => eng.downcase, :jap => jap, :say_it => say_it)
+  when "time"
+    $time.insert(:eng => eng.downcase, :jap => jap, :say_it => say_it)
+  when "symptoms"
+    $symptoms.insert(:eng => eng.downcase, :jap => jap, :say_it => say_it)
   else
     puts "Dictionary not found."
     return false

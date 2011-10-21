@@ -3,12 +3,12 @@
 def search(search_array)
   
 # ----- make word structures ----- #
-  @structs = {'subjects'=> [], 'body_parts' => [], 'verbs' => [], 'comparatives' => [], 'meds' => [], 'adjectives' => [], 'diseases' => [], 'med_types' => [], 'misc' => [] }
+  @structs = {}
   make_structs_hash
   
 # ----- end make word structures ----- #
 # ----- make words_with ----- #
-  @words_with = {'desu' => [], 'kakatteimasu' => [], 'hikimashita' => [], 'shiteimasu' => [], 'arimasu' => [], 'dekiteimasu' => []}
+  @words_with = {}
   make_words_with_hash
   
   @trans_array = []
@@ -30,13 +30,19 @@ def search(search_array)
    puts "Search array contains \"containing\" or \"not containing\". Rearranging..."
   end
  
+ if is_per_time(search_array) # When asking "how many times PER DAY", "per day" needs to go at the front (Japanese) #
+   puts "Search array contains \"per day\" or \"per hour\". Rearranging..."
+ end
+ 
   puts "end: #{search_array.to_s}"
 # ----- End sentence type checking ----- #
 
 # ----- Do the translating! ----- #  
 
   translate(search_array)
+  
   add_necessary_words(search_array)
+  
   return @trans_array.join,@say_it_array.join(" ")
 end
 
@@ -57,6 +63,9 @@ def add_necessary_words(search_array)
       when "shiteimasu"
         @trans_array << "をしています"
         @say_it_array << "o shite imasu"
+      when "shimasu"
+        @trans_array << "がします"
+        @say_it_array << "ga shimasu"
       when "arimasu"
         @trans_array << "があります"
         @say_it_array << "ga arimasu"
@@ -66,7 +75,11 @@ def add_necessary_words(search_array)
       when "dekiteimasu"
         @trans_array << "ができています"
         @say_it_array << "ga dekite imasu"
+      when "demasu"
+        @trans_array << "がでます"
+        @say_it_array << "ga demasu"
       end
+    
     end
   end
 end
@@ -74,6 +87,21 @@ end
 # ----- End add necessary words ----- #
 
 # ------ Sentence type checking functions ------ #
+
+def is_per_time(search_array)
+  if search_array.include?("per day") || search_array.include?("per hour")
+    if search_array.include?("per day")
+      position = search_array.index("per day")
+    elsif search_array.include?("per hour")
+      position = search_array.index("per hour")
+    end
+    per = search_array[position]
+    search_array.delete_at(position)
+    search_array = search_array.unshift(per)
+    return search_array
+  end
+  return false
+end
 
 def is_allergy(search_array)
   if search_array.include?("allergic to") || search_array.include?("not allergic to")
@@ -153,28 +181,9 @@ end
 def get_jap(key, word)
   
   if word.class == String
-    case key
-    when "subjects"
-      result = $subjects.filter(:eng=>word).limit(1).select(:jap, :say_it)
-    when "body_parts"
-      result = $body_parts.filter(:eng=>word).limit(1).select(:jap, :say_it)
-    when "verbs"
-      result = $verbs.filter(:eng=>word).limit(1).select(:jap, :say_it)
-    when "comparatives"
-      result = $comparatives.filter(:eng=>word).limit(1).select(:jap, :say_it)
-    when "meds"
-      result = $meds.filter(:eng=>word).limit(1).select(:jap, :say_it)
-    when "adjectives"
-      result = $adjectives.filter(:eng=>word).limit(1).select(:jap, :say_it)
-    when "diseases"
-      result = $diseases.filter(:eng=>word).limit(1).select(:jap, :say_it)
-    when "med_types"
-      result = $med_types.filter(:eng=>word).limit(1).select(:jap, :say_it)
-    when "misc"
-      result = $misc.filter(:eng=>word).limit(1).select(:jap, :say_it)
-    else
-      return "#{word}(no struct)"
-    end
+    
+    result = $eng_jap.filter(:eng=>word).limit(1).select(:jap, :say_it)
+    
     translation = result.first[:jap]
     say_it = result.first[:say_it]
     return translation,say_it
@@ -183,7 +192,12 @@ def get_jap(key, word)
 end
 
 def make_structs_hash
-    
+  
+  uniq_structs = $structs.distinct.select(:struct)
+  for uniq_struct in uniq_structs
+    @structs[uniq_struct[:struct]] = Array.new
+  end
+  
   structs = $structs.all
   total = 0
   
@@ -200,6 +214,12 @@ end
 
 
 def make_words_with_hash
+
+  uniq_words_with = $words_with.distinct.select(:word)
+  for uniq_word in uniq_words_with
+    @words_with[uniq_word[:word]] = Array.new
+  end
+  
   words_with = $words_with.all
   total = 0
   
@@ -213,16 +233,20 @@ def make_words_with_hash
 end
 
 
-def display_options(key_string, caps, nilfirst)
+def display_options(key_string, caps, nilfirst, off)
   phrases = $structs.filter(:key_string=>key_string)
   phrases = phrases.order(:id).select(:eng)
   
+  string = "<select name=\"phrase[]\""
+  
   if key_string == "containing"
-    string = "<select name=\"phrase[]\" class=\"containing\">\n"
-  else
-    string = "<select name=\"phrase[]\">\n"
+    string += " class=\"containing\">\n"
+  elsif off == "off"
+    string += " disabled=\"disabled\""
   end
-    string += "<option value=\"nil\"> --- </option>\n" if nilfirst == "nilfirst"
+  string += ">"
+  
+  string += "<option value=\"nil\"> --- </option>\n" if nilfirst == "nilfirst"
    
   for phrase in phrases
     if caps == "caps"
@@ -236,4 +260,11 @@ def display_options(key_string, caps, nilfirst)
   return string
 end
 
+
+def autocomplete_category(category)
+  
+  result = $eng_jap.filter(:struct=>category).order(:eng).select(:eng).limit(10)
+  
+return result
+end
 # ------- End fundamental functions ------- #

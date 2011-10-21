@@ -9,6 +9,8 @@ $japmeds_multi = DB[:japmeds_multi]
 $structs = DB[:dict_structs]
 $words_with = DB[:words_with]
 
+$eng_jap = DB[:dict_eng_jap]
+
 $subjects = DB[:dict_subjects]
 $verbs = DB[:dict_verbs]
 $body_parts = DB[:dict_body_parts]
@@ -18,4 +20,6 @@ $adjectives = DB[:dict_adjectives]
 $diseases = DB[:dict_diseases]
 $med_types = DB[:dict_med_types]
 $misc = DB[:dict_misc]
-
+$questions = DB[:dict_questions]
+$time = DB[:dict_time]
+$symptoms = DB[:dict_symptoms]

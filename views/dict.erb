@@ -1,7 +1,9 @@
 <head>
 	<title>TransPharm Phrase Builder</title>
 	<link rel="stylesheet" type="text/css" href="/css/transpharm.css" />
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="/css/jquery-ui-1.8.16.custom.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript"></script>
+	<script type="text/javascript" src="/js/jquery-ui-1.8.16.custom.min.js"></script>
 	<script type="text/javascript" src="/js/jquery.validate.js"></script>
 	<script type="text/javascript">
 
@@ -21,17 +23,59 @@
 			}
 		});
 		
+		$('#shouldbetaken').prev('select').change(function() {
+			var selected = $(this).find('option:selected').text();
+			if (selected == "How many times") {
+				$('#shouldbetaken').next('select').removeAttr('disabled');
+			} else {
+				$('#shouldbetaken').next('select').attr('disabled', 'disabled');
+			}
+		});
+		
+		
+		// This part posts the phrase to the server where it is translated and sent back.
+		
 		$('.phrase_input').click(function() {
 			var phrase = [];
-			$(this).siblings('select').each(function() {
-				phrase.push($(this).find('option:selected').attr('value'));
+			$(this).parent().siblings('select, input').each(function() {
+				if ($(this).is('select')) {
+					var value = ($(this).find('option:selected').attr('value'));
+				} else if ($(this).is('input')) {
+					var value = ($(this).val());
+				}
+				if (value.length != 0) {
+					phrase.push(value);
+				} else {
+					alert("That sentence won't make any sense!");
+					exit;
+				}
 			});
+			
 			$.post('/dict/',
 				{ phrase: phrase },
 				function(data) {
 					$('#ajax_result').html(data);
-			});
+					
+				}
+			);
 		});
+		$('.autosearch').hover(
+			function() { 
+				$(this).addClass("hover"); 
+			},
+		 	function () {
+				$(this).removeClass("hover");
+			});
+		
+		$('.autosearch').each(function() {
+			var category = $(this).attr("category");
+			$(this).autocomplete({source: "/dict/autocomplete/" + category, minLength: 0}); 
+			
+		});		
+		$('.autosearch').click( function() {
+			$(this).autocomplete("search", '');
+		});
+		
 	});
 	
 
@@ -44,64 +88,78 @@
 	<center>
 		<h1><u>Phrase Builder</u></h1>
 	
-	<div>
-		<h3>Medical conditions and diseases</h3>
+	<div class="styled-select">
+		<h2>Medical conditions and diseases</h2>
 		
 		
-<%= display_options("i have", "caps", "no nils") %>
+<%= display_options("i have", "caps", "no nils", "on") %>
 					
-<%= display_options("diseases", "no_caps", "no nils") %>
 
-		<br />
-		<input class="phrase_input" type="button" value="do it">
+		<input class="ui-widget autosearch" category="diseases" placeholder="Click or Type">
+
+		<span><input class="phrase_input" type="button" value="Do it!"></span>
 		
 	</div>
 	
-	<div>
-		<h3>If something hurts</h3>
+	<div class="styled-select">
+		<h2>Symptoms and Pain</h2>
+
 		
-<%= display_options("possessives", "caps", "no nils") %>
+<%= display_options("possessives", "caps", "no nils", "on") %>
 			
-<%= display_options("body_parts", "no_caps", "no nils") %>
+<%= display_options("body_parts", "no_caps", "no nils", "on") %>
 
-<%= display_options("verbs", "no_caps", "no nils") %>
+<%= display_options("verbs", "no_caps", "no nils", "on") %>
 
-<%= display_options("comparatives", "no_caps", "nilfirst") %>
+<%= display_options("comparatives", "no_caps", "nilfirst", "on") %>
 
-		<br />
-		<input class="phrase_input" type="button" value="do it">
-		 	
+		<span class="phrase_input_span"><input class="phrase_input" type="button" value="Do it!"><span>
+
 	</div>
-	
-	<div>
-		<h3>Allergy</h3>
-					
-<%= display_options("i am", "caps", "no nils") %>
+
+	<div class="styled-select">
+
+<%= display_options("i have", "caps", "no nils", "on")%>
+
+	<input class="ui-widget autosearch" category="symptoms" placeholder="Click or Type">	
 		
-<%= display_options("adjectives", "no_caps", "no nils") %>
+		<span class="phrase_input_span"><input class="phrase_input" type="button" value="Do it!"><span>
+	</div>
+	
+	<div class="styled-select">
+		<h2>Allergy</h2>
+					
+<%= display_options("i am", "caps", "no nils", "on") %>
+		
+<%= display_options("adjectives", "no_caps", "no nils", "on") %>
 
-<%= display_options("meds", "no_caps", "no nils") %>
+<input class="ui-widget autosearch" category="meds" placeholder="Click or Type">
 
-		<br />
-		<input class="phrase_input" type="button" value="do it">
+		<span><input class="phrase_input" type="button" value="Do it!"></span>
 
 	</div>
 	
-	<div>
-		<h3>Buying medicine</h3>
+	<div class="styled-select">
+		<h2>Buying medicine</h2>
 
-<%= display_options("med_types", "caps", "no nils") %>
+<%= display_options("med_types", "caps", "no nils", "on") %>
 
 
-<%= display_options("containing", "no_caps", "nilfirst") %>
+<%= display_options("containing", "no_caps", "nilfirst", "on") %>
 
-<%= display_options("meds", "no_caps", "nilfirst") %>
+<%= display_options("meds", "no_caps", "nilfirst", "on") %>
 
-<%= display_options("please", "no_caps", "no nils") %>
+<%= display_options("please", "no_caps", "no nils", "on") %>
+		<span><input class="phrase_input" type="button" value="Do it!"></span>
 
-		<br />
-		<input class="phrase_input" type="button" value="do it">
-
+	</div>
+	<div class="styled-select">
+		<h2>Using medicine</h2>
+<%= display_options("questions", "caps", "no nils", "on")%>
+	<select id="shouldbetaken" name="params[]"><option value="should this medicine be taken">should this medicine be taken</option></select>
+<%= display_options("time", "no_caps", "nilfirst", "off")%>
+	<select name="params[]"><option value="?">?</option></select>
+		<span><input class="phrase_input" type="button" value="Do it!"></span>
 	</div>
 
 <div id="ajax_result">

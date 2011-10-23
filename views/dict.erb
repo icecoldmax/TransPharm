@@ -8,6 +8,8 @@
 	<script type="text/javascript">
 
 	$(document).ready(function(){
+		
+		do_autosearch();
 	
 		// Disable the select box following a "containing" select box. //
 		$('select.containing').next().attr('disabled', 'disabled');
@@ -23,12 +25,32 @@
 			}
 		});
 		
+		// Enables "per day" or "per hour" when selecting "how many times" - for "How many times a day should this medicine be taken?"
 		$('#shouldbetaken').prev('select').change(function() {
 			var selected = $(this).find('option:selected').text();
 			if (selected == "How many times") {
 				$('#shouldbetaken').next('select').removeAttr('disabled');
 			} else {
+				$('#shouldbetaken').next('select').find('option:first').attr('selected', 'selected');
 				$('#shouldbetaken').next('select').attr('disabled', 'disabled');
+			}
+		});
+		
+		// Toggles adjectives for "hurts" or "feels". i.e. "my head hurts..." activates "a lot" or "a little." Changing "hurts" to "feels" brings up the adverbs ((feels) hot, cold) and hides "a lot, a little"
+		
+		var html = "<input class=\"ui-widget autosearch ui-autocomplete-input\" category=\"adverbs\" placeholder=\"Click or Type\" autocomplete=\"on\" role=\"textbox\" aria-autocomplete=\"list\" aria-haspopup=\"true\">";
+		
+		$('#symptoms select.verbs').change(function() {
+			var selected = $(this).find('option:selected').text();
+			if (selected == "hurt(s)") {
+				$(this).siblings('input[category="adverbs"]').remove();
+				$(this).siblings('select.comparatives').removeAttr('disabled').show();
+			} else if (selected == "feel(s)") {
+				$(this).after(html);
+				do_autosearch();
+				
+				$(this).siblings('select.comparatives').find('option:first').attr('selected', 'selected');
+				$(this).siblings('select.comparatives').attr('disabled', 'disabled').hide();
 			}
 		});
 		
@@ -47,38 +69,47 @@
 					phrase.push(value);
 				} else {
 					alert("That sentence won't make any sense!");
-					exit;
+					return false;
 				}
 			});
 			
 			$.post('/dict/',
 				{ phrase: phrase },
 				function(data) {
-					$('#ajax_result').html(data);
-					
+					if (data.search("not_found") != -1) {
+						var first_bracket_index = data.indexOf("(");
+						var last_bracket_index = data.indexOf(")");
+						var word = data.slice(first_bracket_index+1, last_bracket_index);
+						
+						alert("Sorry, '" + word + "' is not in our dictionary :(");
+					} else {
+						$('#ajax_result').html(data);
+					}
 				}
 			);
 		});
-		$('.autosearch').hover(
-			function() { 
-				$(this).addClass("hover"); 
-			},
-		 	function () {
-				$(this).removeClass("hover");
-			});
 		
-		$('.autosearch').each(function() {
-			var category = $(this).attr("category");
-			$(this).autocomplete({source: "/dict/autocomplete/" + category, minLength: 0}); 
-			
-		});		
-		$('.autosearch').click( function() {
-			$(this).autocomplete("search", '');
-		});
 		
 	});
 	
-
+function do_autosearch() {
+	$('.autosearch').hover(
+		function() { 
+			$(this).addClass("hover"); 
+		},
+	 	function () {
+			$(this).removeClass("hover");
+		});
+	
+	$('.autosearch').each(function() {
+		var category = $(this).attr("category");
+		$(this).autocomplete({source: "/dict/autocomplete/" + category, minLength: 0, delay: 1000}); 
+		
+	});		
+	$('.autosearch').click( function() {
+		$(this).autocomplete("search", '');
+	});
+};
 </script>
 
 </head>
@@ -88,11 +119,11 @@
 	<center>
 		<h1><u>Phrase Builder</u></h1>
 	
-	<div class="styled-select">
+	<div id="diseases" class="styled-select">
 		<h2>Medical conditions and diseases</h2>
 		
 		
-<%= display_options("i have", "caps", "no nils", "on") %>
+<%= display_options("i have", "caps", "no nils", "not_disabled", "not hidden") %>
 					
 
 		<input class="ui-widget autosearch" category="diseases" placeholder="Click or Type">
@@ -101,17 +132,18 @@
 		
 	</div>
 	
-	<div class="styled-select">
+	<div id="symptoms">
+		<div class="styled-select">
 		<h2>Symptoms and Pain</h2>
 
 		
-<%= display_options("possessives", "caps", "no nils", "on") %>
+<%= display_options("possessives", "caps", "no nils", "not_disabled", "not hidden") %>
 			
-<%= display_options("body_parts", "no_caps", "no nils", "on") %>
+<%= display_options("body_parts", "no_caps", "no nils", "not_disabled", "not hidden") %>
 
-<%= display_options("verbs", "no_caps", "no nils", "on") %>
+<%= display_options("verbs", "no_caps", "no nils", "not_disabled", "not hidden") %>
 
-<%= display_options("comparatives", "no_caps", "nilfirst", "on") %>
+<%= display_options("comparatives", "no_caps", "nilfirst", "not_disabled", "not hidden") %>
 
 		<span class="phrase_input_span"><input class="phrase_input" type="button" value="Do it!"><span>
 
@@ -119,19 +151,21 @@
 
 	<div class="styled-select">
 
-<%= display_options("i have", "caps", "no nils", "on")%>
+<%= display_options("i have", "caps", "no nils", "not_disabled", "not hidden")%>
 
 	<input class="ui-widget autosearch" category="symptoms" placeholder="Click or Type">	
 		
 		<span class="phrase_input_span"><input class="phrase_input" type="button" value="Do it!"><span>
 	</div>
+	</div>
+
 	
-	<div class="styled-select">
+	<div id="allergy" class="styled-select">
 		<h2>Allergy</h2>
 					
-<%= display_options("i am", "caps", "no nils", "on") %>
+<%= display_options("i am", "caps", "no nils", "not_disabled", "not hidden") %>
 		
-<%= display_options("adjectives", "no_caps", "no nils", "on") %>
+<%= display_options("allergic", "no_caps", "no nils", "not_disabled", "not hidden") %>
 
 <input class="ui-widget autosearch" category="meds" placeholder="Click or Type">
 
@@ -139,25 +173,25 @@
 
 	</div>
 	
-	<div class="styled-select">
+	<div id="buymeds" class="styled-select">
 		<h2>Buying medicine</h2>
 
-<%= display_options("med_types", "caps", "no nils", "on") %>
+<%= display_options("med_types", "caps", "no nils", "not_disabled", "not hidden") %>
 
 
-<%= display_options("containing", "no_caps", "nilfirst", "on") %>
+<%= display_options("containing", "no_caps", "nilfirst", "not_disabled", "not hidden") %>
 
-<%= display_options("meds", "no_caps", "nilfirst", "on") %>
+<%= display_options("meds", "no_caps", "nilfirst", "not_disabled", "not hidden") %>
 
-<%= display_options("please", "no_caps", "no nils", "on") %>
+<%= display_options("please", "no_caps", "no nils", "not_disabled", "not hidden") %>
 		<span><input class="phrase_input" type="button" value="Do it!"></span>
 
 	</div>
-	<div class="styled-select">
+	<div id="usemeds" class="styled-select">
 		<h2>Using medicine</h2>
-<%= display_options("questions", "caps", "no nils", "on")%>
+<%= display_options("questions", "caps", "no nils", "not_disabled", "not hidden")%>
 	<select id="shouldbetaken" name="params[]"><option value="should this medicine be taken">should this medicine be taken</option></select>
-<%= display_options("time", "no_caps", "nilfirst", "off")%>
+<%= display_options("time", "no_caps", "nilfirst", "disabled", "not hidden")%>
 	<select name="params[]"><option value="?">?</option></select>
 		<span><input class="phrase_input" type="button" value="Do it!"></span>
 	</div>

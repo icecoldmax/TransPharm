@@ -17,7 +17,9 @@ def search(search_array)
   puts "start: #{search_array.to_s}"
   
 # ----- Sentence type checking ----- #
-      
+  if feels_adverb(search_array) # eg "My hands feel cold" - swap the adverb("samuku") with feels("kanjimasu") to get the right order (Japanese)
+    puts "Search array contains \"feels\". Rearranging..."
+  end      
   if is_allergy(search_array) # Allergy  - swap "allergic to" with (for eg.) "penicillin" (Japanese) #
     puts "Search array contains \"allergic to\". Rearranging..."
   end
@@ -87,6 +89,15 @@ end
 # ----- End add necessary words ----- #
 
 # ------ Sentence type checking functions ------ #
+
+def feels_adverb(search_array)
+  if search_array.include?("feel(s)")
+    position = search_array.index("feel(s)")
+    search_array[position], search_array[position+1] = search_array[position+1], search_array[position]
+    return search_array
+  end
+  return false
+end
 
 def is_per_time(search_array)
   if search_array.include?("per day") || search_array.include?("per hour")
@@ -183,10 +194,14 @@ def get_jap(key, word)
   if word.class == String
     
     result = $eng_jap.filter(:eng=>word).limit(1).select(:jap, :say_it)
-    
-    translation = result.first[:jap]
-    say_it = result.first[:say_it]
-    return translation,say_it
+    unless result.count == 0
+      translation = result.first[:jap]
+      say_it = result.first[:say_it]
+      return translation,say_it
+    else
+      puts "Not in Dictionary: '#{word}'"
+      return "not_found(#{word})"
+    end
   end
   return word
 end
@@ -233,9 +248,43 @@ def make_words_with_hash
 end
 
 
-def display_options(key_string, caps, nilfirst, off)
+def display_options(key_string, caps, nilfirst, disabled, hidden)
   phrases = $structs.filter(:key_string=>key_string)
   phrases = phrases.order(:id).select(:eng)
+  
+  string = "<select class=\"#{key_string}\" name=\"phrase[]\""
+  
+  if key_string == "containing"
+    string += " class=\"containing\">\n"
+  elsif disabled == "disabled"
+    string += " disabled=\"disabled\""
+  end
+  
+  if hidden == "hidden"
+    string += "style=\"display: none;\""
+  end
+  
+  string += ">"
+  
+  string += "<option value=\"nil\"> --- </option>\n" if nilfirst == "nilfirst"
+   
+  for phrase in phrases
+    if caps == "caps"
+      phrase[:eng] = phrase[:eng].capitalize
+    end
+  
+    string += "<option value=\"#{phrase[:eng]}\">#{phrase[:eng]}</option>\n"
+  end
+  
+  string += "</select>"
+  return string
+end
+
+def display_double_options(key_string, second_key_string, caps, nilfirst, off)
+  phrases = $structs.filter(:key_string=>key_string)
+  phrases2 = $structs.filter(:key_string=>second_key_string)
+  phrases = phrases.order(:id).select(:eng)
+  phrases2 = phrases2.order(:id).select(:eng)
   
   string = "<select name=\"phrase[]\""
   
@@ -256,15 +305,25 @@ def display_options(key_string, caps, nilfirst, off)
     string += "<option value=\"#{phrase[:eng]}\">#{phrase[:eng]}</option>\n"
   end
   
+  for phrase2 in phrases2
+    if caps == "caps"
+      phrase2[:eng] = phrase2[:eng].capitalize
+    end
+  
+    string += "<option value=\"#{phrase2[:eng]}\">#{phrase2[:eng]}</option>\n"
+  end
+  
   string += "</select>"
   return string
 end
 
-
-def autocomplete_category(category)
-  
-  result = $eng_jap.filter(:struct=>category).order(:eng).select(:eng).limit(10)
-  
-return result
+def autocomplete_category(category, search_term)
+  match_array = []
+  results = $eng_jap.filter(:struct=>category)
+  results = results.filter(:eng.like(/^#{search_term}/, / #{search_term}/)).order(:eng).select(:eng).limit(10)
+  for match in results
+    match_array << match[:eng]
+  end
+return match_array
 end
 # ------- End fundamental functions ------- #

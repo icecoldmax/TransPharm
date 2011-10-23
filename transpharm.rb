@@ -22,6 +22,13 @@ def fix_orig_phrase(phrase)   # also fix if "containing" is misused
      
 end
 
+def memory_check
+  mem = `vmmap #{Process.pid}`.squeeze
+  pos = mem.index("TOTAL")
+  mem = mem[pos+6, 5]
+  puts "Current memory usage: #{mem}"
+end
+
 module Transpharm
 
   get '/' do
@@ -33,7 +40,7 @@ module Transpharm
   end
   
   post '/medsearch/' do
-    
+  
     medsearch
     
     puts "Displaying results for search: '#{@search_terms}'  in  '#{@search_params}' (#{@results.count} results)"
@@ -43,43 +50,44 @@ module Transpharm
     end
     
     get '/dict/' do
+      memory_check
+      
       erb :dict
+      
     end
     
     post '/dict/' do
-     
       @phrase = params[:phrase]
       while @phrase.include?("nil")
         @phrase.delete("nil")
       end
       fix_orig_phrase(@phrase)
       @jap_phrase,@say_it_phrase = search(@phrase)
-      
+      memory_check
       erb :translation, :layout => false
             
     end
     
     get '/dict/autocomplete/:category' do
+      @match_array = []
       category = params[:category]
-      term = params[:term].downcase
-      @array = []   
-      words = autocomplete_category(category)
+      search_term = params[:term].downcase
+         
+      @match_array = autocomplete_category(category, search_term)
             
-      for word in words
-          @array << word[:eng] if word[:eng] =~ /^#{term}|\s#{term}/
-      end
-      puts "Search in '#{category}' | Term: '#{term}' | Matches: #{@array.join(", ")}."
+      puts "Search in '#{category}' | Term: '#{search_term}' | Matches: #{@match_array.join(", ")}."
+      memory_check      
+      @match_array.to_json
             
-      @array.to_json
-      
-              
     end
     
     get '/dict/addwords/' do
+      memory_check
       erb :addwords
     end
     
     post '/dict/addwords/' do
+      require './lib/addwords'
       
       eng = params[:eng]
       jap = params[:jap]
@@ -89,7 +97,7 @@ module Transpharm
       necc_words = params[:necc_words]
       
       @success = addwords(eng, jap, say_it, dict, key_string, necc_words)
-      
+      memory_check
       erb :addwords
     end
 

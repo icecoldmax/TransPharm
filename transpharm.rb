@@ -22,6 +22,18 @@ def fix_orig_phrase(phrase)   # also fix if "containing" is misused
      
 end
 
+def fix_multi_phrase(phrase)   # also fix if "containing" is misused
+  if phrase.length == 3
+    if phrase.include?("containing")
+      phrase.delete("containing")
+    elsif phrase.include?("not containing")
+      phrase.delete("not containing")
+    end
+  end
+  return phrase
+       
+end
+
 def memory_check
   mem = `vmmap #{Process.pid}`.squeeze
   pos = mem.index("TOTAL")
@@ -80,6 +92,23 @@ module Transpharm
       @match_array.to_json
             
     end
+    
+    get '/multidict/' do
+      erb :multidict
+    end 
+    
+    post '/multidict/' do
+      @allphraseshash = params[:all_phrases]
+      @multi_jap_say_it_phrases = []
+      @allphraseshash.each_value do |phrase|
+        fix_multi_phrase(phrase)
+        jap_phrase,say_it_phrase = search(phrase)
+        @multi_jap_say_it_phrases << [jap_phrase, say_it_phrase]
+      end
+    
+    erb :multi_translation, :layout => false
+        
+    end 
     
     get '/dict/addwords/' do
       memory_check

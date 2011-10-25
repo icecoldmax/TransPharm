@@ -1,0 +1,8 @@
+<ol>
+<% for phrase in @multi_jap_say_it_phrases %>
+
+<li class="multi_jap_say_it_phrase"><span class="multi_jap_phrase"><%= phrase[0] %></span><br />
+	Say it: <span class="multi_say_it_phrase">"<%= phrase[1] %>"</span></li>
+
+<% end %>
+</ol>

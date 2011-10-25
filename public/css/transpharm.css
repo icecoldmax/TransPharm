@@ -205,3 +205,36 @@ td.short_result_td_en.selected, td.short_result_td_ja.selected {
 	font-size: 14px;
 	width: 200px;
 }
+
+.multi_phrases {
+	display: none;
+	background-color: #fffcd4;
+	width: 40%;
+	border: solid 1px darkred;
+	font-family: "Courier New", Courier, mono;
+	font-weight: bold;
+	padding: 10px;
+	margin: 10px;
+}
+
+.multi_phrases ol {
+	list-style-position: inside;
+	padding: 0px;
+	margin: 0px;
+}
+
+.multi_phrases ol li {
+	margin: 5px 0px 5px 0px;
+	padding: 5px;
+	border-bottom: 1px solid silver;
+}
+
+.multi_jap_phrase {
+	font-size: 1.5em;
+}
+
+.multi_say_it_phrase {
+
+	font-style: italic;
+	color: #aa005b;
+}
